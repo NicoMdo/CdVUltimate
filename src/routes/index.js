@@ -1,5 +1,7 @@
  //archivo que recolecta todas las rutas 
  
- const tagRoute = require('./tag.route')
+ const tagRoute = require('./tag.route');
+ const userRoute = require('./user.route');
 
- module.exports = { tagRoute };
+
+ module.exports = { tagRoute, userRoute };
