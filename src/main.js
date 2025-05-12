@@ -14,11 +14,11 @@ const PORT = process.env.PORT || 3001;
 
 app.use(express.json());
 
-const {tagRoute} = require('./routes');
-app.use('/tags', tagRoute);
-
+const {tagRoute, userRoute} = require('./routes');
+app.use('/tag', tagRoute);
+app.use('/user', userRoute);
 
 app.listen(PORT, async () => {
     console.log(`La app arranco en el puerto ${PORT}.`);
-    await db.sequelize.sync({force:true})
+    //await db.sequelize.sync({force:true})
 });
