@@ -1,0 +1,38 @@
+{
+  "name": "anti-social",
+  "version": "1.0.0",
+  "description": "UnaHur anti-social net - Trabajo Práctico",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon src/main.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node src/main"
+  },
+  "author": "Gerardo Gonzalez Tulian",
+  "license": "MIT",
+  "devDependencies": {
+    "nodemon": "^3.1.10",
+    "sequelize-cli": "^6.6.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EP-UnaHur-2025C1/anti-social-relational-marcenicos.git"
+  },
+  "keywords": [],
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/EP-UnaHur-2025C1/anti-social-relational-marcenicos/issues"
+  },
+  "homepage": "https://github.com/EP-UnaHur-2025C1/anti-social-relational-marcenicos#readme",
+  "dependencies": {
+    "express": "^5.1.0",
+    "sequelize": "^6.37.7",
+    "sqlite3": "^5.1.7"
+  },
+  "sequelize-cli": {
+    "config": "src/db/config/config.json",
+    "models-path": "src/db/models",
+    "seeders-path": "src/db/seeders",
+    "migrations-path": "src/db/migrations"
+  }
+}
