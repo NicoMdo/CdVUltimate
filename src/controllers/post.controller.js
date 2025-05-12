@@ -1,5 +1,6 @@
 const { Post } = require('../db/models');
 
+//Devuelve todos los posts
 const getAllPosts = async (req, res) => {
     try {
         const posts = await Post.findAll({});
@@ -9,6 +10,7 @@ const getAllPosts = async (req, res) => {
     }
 };
 
+//Crea un Post
 const createPost = async (req, res) => {
     try {
         const { title, content, userId } = req.body;

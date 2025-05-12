@@ -5,7 +5,7 @@ const { User } = require('../db/models');
 const getUsers = async (req, res) => {
   try {
     const users = await User.findAll();
-    res.json(users);
+    res.status(200).json(users);
   } catch (error) {
     res.status(500).json({ error: 'Error fetching users' });
   }
@@ -17,12 +17,12 @@ const getUserById = async (req, res) => {
   if (data)
     res.status(200).json(data);
   else
-    res.status(404).json({message: "Usuario no encontrado"});
+    res.status(404).json({ message: "Usuario no encontrado" });
 };
 
 //Crea un usuario
 const createUser = async (req, res) => {
-    try {
+  try {
     const newUser = await User.create(req.body);
     res.status(201).json(newUser);
   } catch (error) {
