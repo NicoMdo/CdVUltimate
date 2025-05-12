@@ -1,6 +1,6 @@
 const { Post } = require('../db/models');
 
-const getAllPosts = async (req, res) => {
+const getPosts = async (req, res) => {
     try {
         const posts = await Post.findAll({});
         res.status(200).json(posts);
@@ -11,12 +11,11 @@ const getAllPosts = async (req, res) => {
 
 const createPost = async (req, res) => {
     try {
-        const { title, content, userId } = req.body;
-        const newPost = await Post.create({ title, content, userId });
+        const newPost = await Post.create(req.body);
         res.status(201).json(newPost);
     } catch (err) {
         res.status(500).json({ error: 'Error al crear el post' });
     }
 };
 
-module.exports = { getAllPosts, createPost };
+module.exports = { getPosts, createPost };

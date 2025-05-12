@@ -31,6 +31,7 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'postId',
         otherKey: 'tagId'
       });
+      
 
 
     }
