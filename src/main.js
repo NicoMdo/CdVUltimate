@@ -14,9 +14,10 @@ const PORT = process.env.PORT || 3001;
 
 app.use(express.json());
 
-const {tagRoute, userRoute} = require('./routes');
+const {tagRoute, userRoute, postRoute} = require('./routes');
 app.use('/tag', tagRoute);
 app.use('/user', userRoute);
+app.use('/post', postRoute);
 
 app.listen(PORT, async () => {
     console.log(`La app arranco en el puerto ${PORT}.`);
