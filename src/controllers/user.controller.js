@@ -30,8 +30,16 @@ const createUser = async (req, res) => {
   }
 };
 
-module.exports = {
-  getUsers,
-  getUserById,
-  createUser,
+const deleteUser = async (req, res) => {
+    try {
+        const data = await User.findByPk(req.params.id);
+        const removed = await data.destroy() 
+        res.status(200).json({message: `El usuario con número de ID ${removed.id} se ha borrado correctamente`});
+    } catch {
+        res.status(404).json({ message: 'No se encuentra el usuario solicitado' });
+    }
 };
+
+
+
+module.exports = { getUsers, getUserById, createUser, deleteUser};

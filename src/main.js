@@ -8,12 +8,15 @@
 })(); */
 
 const express = require('express');
-const db = require('./db/models')
+const db = require('./db/models');
+const {generic} = require("./middlewares");
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-app.use(express.json());
 
+
+app.use(express.json());
+app.use(generic.logRequest);
 const {tagRoute, userRoute, postRoute, postImageRoute} = require('./routes');
 app.use('/tag', tagRoute);
 app.use('/user', userRoute);
