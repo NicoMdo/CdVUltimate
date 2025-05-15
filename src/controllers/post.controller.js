@@ -1,4 +1,4 @@
-const { Post, Comment } = require('../db/models');
+const { Post, PostImage, Comment } = require('../db/models');
 
 const getPosts = async (req, res) => {
     try {
@@ -18,12 +18,22 @@ const getPostById = async (req, res) => {
 };
 
 const createPost = async (req, res) => {
-    try {
-        const newPost = await Post.create(req.body);
-        res.status(201).json(newPost);
-    } catch (err) {
-        res.status(500).json({ error: 'Error al crear el post' });
+  try {
+    const newPost = await Post.create(req.body);
+
+    if (req.files) {
+      const imagesToCreate = req.files.map(file => ({
+        postId: newPost.id,
+        url: `/images/${file.filename}` // guardamos la ruta relativa para poder servirla después
+      }));
+
+      await PostImage.bulkCreate(imagesToCreate);
     }
+
+    res.status(201).json(newPost);
+  } catch (err) {
+    res.status(500).json({ error: 'Error al crear el post con imágenes' });
+  }
 };
 
 const deletePost = async (req, res) => {
