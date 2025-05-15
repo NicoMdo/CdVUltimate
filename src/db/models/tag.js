@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       //asociacion N:N tag y post
       Tag.belongsToMany(models.Post, {
         through: 'PostTags',
+        as: 'posts',
         foreignKey: 'tagId',
         otherKey: 'postId'
       });
