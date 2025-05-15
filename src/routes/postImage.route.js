@@ -7,5 +7,7 @@ router.get('/', postImageController.getPostImages);
 router.get('/:id', postImageMiddleware.validId, postImageController.getPostImageById);
 router.post('/', postImageController.createPostImage);
 router.delete('/:id', postImageMiddleware.validId, postImageController.deletePostImage);
+router.put('/:id', postImageMiddleware.validId, postImageController.updatePostImage);
+
 
 module.exports = router;

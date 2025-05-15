@@ -29,6 +29,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'PostImage',
+    timestamps: false
   });
   return PostImage;
 };

@@ -37,5 +37,18 @@ const deletePostImage = async (req, res) => {
     }
 };
 
+const updatePostImage = async (req, res) => {
+  try {
+    const image = await PostImage.findByPk(req.params.id);
+    if (!image) {
+      return res.status(404).json({ message: 'Imagen no encontrada' });
+    }
+    await image.update(req.body);
+    res.status(200).json(image);
+  } catch (error) {
+    res.status(500).json({ error: 'Error actualizando la imagen del post' });
+  }
+};
 
-module.exports = { getPostImages, getPostImageById, createPostImage, deletePostImage };
+
+module.exports = { getPostImages, getPostImageById, createPostImage, deletePostImage, updatePostImage };

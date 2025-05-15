@@ -13,9 +13,6 @@ module.exports = {
       text: {
         type: Sequelize.STRING
       },
-      visible: {
-        type: Sequelize.BOOLEAN
-      },
       postId: {
         type: Sequelize.INTEGER,
         references: {
