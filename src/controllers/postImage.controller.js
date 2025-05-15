@@ -1,4 +1,4 @@
-const { PostImage } = require('../db/models');
+const { Post, PostImage } = require('../db/models');
 
 const getPostImages = async (req, res) => {
     try {
@@ -50,5 +50,32 @@ const updatePostImage = async (req, res) => {
   }
 };
 
+const uploadImageForPost = async (req, res) => {
+  try {
+    const postId = req.params.postId;
 
-module.exports = { getPostImages, getPostImageById, createPostImage, deletePostImage, updatePostImage };
+    // Verificar si existe el post
+    const post = await Post.findByPk(postId);
+    if (!post) {
+      return res.status(404).json({ message: 'Post no encontrado' });
+    }
+
+    if (!req.file) {
+      return res.status(400).json({ message: 'No se envió archivo' });
+    }
+
+    // Guardar registro de imagen
+    const newImage = await PostImage.create({
+      postId,
+      url: `/images/${req.file.filename}`
+    });
+
+    res.status(201).json({ message: 'Imagen subida con éxito', image: newImage });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error al subir la imagen' });
+  }
+};
+
+
+module.exports = { getPostImages, getPostImageById, createPostImage, deletePostImage, updatePostImage, uploadImageForPost };
