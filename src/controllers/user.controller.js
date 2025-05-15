@@ -30,6 +30,7 @@ const createUser = async (req, res) => {
   }
 };
 
+//Borra un usuario
 const deleteUser = async (req, res) => {
     try {
         const data = await User.findByPk(req.params.id);
@@ -40,6 +41,19 @@ const deleteUser = async (req, res) => {
     }
 };
 
+// Actualiza un usuario
+const updateUser = async (req, res) => {
+  try {
+    const user = await User.findByPk(req.params.id);
+    if (!user) return res.status(404).json({ message: "Usuario no encontrado" });
+
+    await user.update(req.body);
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(400).json({ error: 'Error al actualizar el usuario' });
+  }
+};
 
 
-module.exports = { getUsers, getUserById, createUser, deleteUser};
+
+module.exports = { getUsers, getUserById, createUser, deleteUser, updateUser};
