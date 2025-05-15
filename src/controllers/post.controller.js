@@ -1,4 +1,4 @@
-const { Post, PostImage, Comment } = require('../db/models');
+const { Post, PostImage, Comment, Tag } = require('../db/models');
 
 const getPosts = async (req, res) => {
     try {
@@ -18,22 +18,22 @@ const getPostById = async (req, res) => {
 };
 
 const createPost = async (req, res) => {
-  try {
-    const newPost = await Post.create(req.body);
+    try {
+        const newPost = await Post.create(req.body);
 
-    if (req.files) {
-      const imagesToCreate = req.files.map(file => ({
-        postId: newPost.id,
-        url: `/images/${file.filename}` // guardamos la ruta relativa para poder servirla después
-      }));
+        if (req.files) {
+            const imagesToCreate = req.files.map(file => ({
+                postId: newPost.id,
+                url: `/images/${file.filename}` // guardamos la ruta relativa para poder servirla después
+            }));
 
-      await PostImage.bulkCreate(imagesToCreate);
+            await PostImage.bulkCreate(imagesToCreate);
+        }
+
+        res.status(201).json(newPost);
+    } catch (err) {
+        res.status(500).json({ error: 'Error al crear el post con imágenes' });
     }
-
-    res.status(201).json(newPost);
-  } catch (err) {
-    res.status(500).json({ error: 'Error al crear el post con imágenes' });
-  }
 };
 
 const deletePost = async (req, res) => {
@@ -63,17 +63,11 @@ const updatePost = async (req, res) => {
 const getCommentsByPost = async (req, res) => {
     try {
         const postId = req.params.id;
+        const comments = await Comment.findAll({ where: { postId: postId}});
 
-        // Verifica si el post existe
-        const post = await Post.findByPk(postId);
-        if (!post) {
-            return res.status(404).json({ message: 'Post no encontrado' });
-        }
 
         // Trae los comentarios asociados
-        const comments = await Comment.findAll({
-            where: { postId }
-        });
+        // postId.getComments({ where: { postId: postId} });
 
         res.status(200).json(comments);
     } catch (error) {
@@ -81,5 +75,46 @@ const getCommentsByPost = async (req, res) => {
     }
 };
 
+const addTagsToPost = async (req, res) => {
+    try {
+        const { tagIds } = req.body; // espera un array de IDs de tags
 
-module.exports = { getPosts, createPost, getPostById, deletePost, updatePost, getCommentsByPost };
+
+        // Verifica que los tags existan
+        const tags = await Tag.findAll({ where: { id: tagIds } });
+        if (tags.length !== tagIds.length) {
+            return res.status(400).json({ message: 'Uno o más tags no existen' });
+        }
+
+        // Asocia los tags al post
+        await post.addTags(tags);
+
+        res.status(200).json({ message: 'Tags asignados correctamente al post' });
+    } catch (err) {
+        res.status(500).json({ error: 'Error al asignar los tags al post' });
+    }
+};
+
+const getTagsByPost = async (req, res) => {
+    try {
+        const postId = req.params.id;
+
+        const post = await Post.findByPk(postId, {
+            include: [{ model: Tag, as: 'tags', through: { attributes: [] } }]
+        });
+
+        if (!post) {
+            return res.status(404).json({ message: 'Post no encontrado' });
+        }
+
+        res.status(200).json(post.tags);
+    } catch (error) {
+        console.error("Error al obtener los tags:", error);
+        res.status(500).json({ error: 'Error al obtener los tags del post' });
+    }
+};
+
+
+
+
+module.exports = { getPosts, createPost, getPostById, deletePost, updatePost, getCommentsByPost, addTagsToPost, getTagsByPost };

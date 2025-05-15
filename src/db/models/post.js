@@ -28,10 +28,11 @@ module.exports = (sequelize, DataTypes) => {
       //Asociacion muchos a muchos entre post y tag
       Post.belongsToMany(models.Tag, {
         through: 'PostTags',
+        as: 'tags',
         foreignKey: 'postId',
         otherKey: 'tagId'
       });
-      
+
 
 
     }
