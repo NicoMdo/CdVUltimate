@@ -1,4 +1,5 @@
 const { Post, PostImage, Comment, Tag } = require('../db/models');
+const cache = require('../../utils/cache')
 
 const getPosts = async (req, res) => {
     try {
@@ -10,12 +11,33 @@ const getPosts = async (req, res) => {
 };
 
 const getPostById = async (req, res) => {
+    const postid = req.params.id;
+
+    // Revisar si ya está en el cache
+    const cachedPost = cache.get(`post_${postid}`);
+
+    if (cachedPost) {
+        console.log('📦 Devolviendo post desde cache');
+        return res.status(200).json(cachedPost);
+    }
+
     try {
-        const postid = req.params.id;
-        const postId = await Post.findOne({where: {id: postid}, include: ["comments", "images", "tags"]});
-        res.status(200).json(postId.tags);
-    } catch {
-        res.status(404).json({ message: 'No se encuentra el posteo solicitado' });
+        const post = await Post.findOne({
+            where: { id: postid },
+            include: ["comments", "images", "tags"]
+        });
+
+        if (!post) {
+            return res.status(404).json({ message: 'No se encuentra el posteo solicitado' });
+        }
+
+        // Guardar en cache
+        cache.set(`post_${postid}`, post);
+
+        console.log('🛠️ Post obtenido desde la base de datos');
+        res.status(200).json(post);
+    } catch (error) {
+        res.status(500).json({ message: 'Error al obtener el post' });
     }
 };
 
@@ -40,8 +62,10 @@ const createPost = async (req, res) => {
 
 const deletePost = async (req, res) => {
     try {
-        const data = await Post.findByPk(req.params.id);
+        const id = req.params.id;
+        const data = await Post.findByPk(id);
         const removed = await data.destroy()
+        cache.del(`post_${id}`); // Borra la entrada en caché
         res.status(200).json({ message: `El posteo con número de ID ${removed.id} se ha borrado correctamente` });
     } catch {
         res.status(404).json({ message: 'No se encuentra la imagen solicitada' });
@@ -51,12 +75,14 @@ const deletePost = async (req, res) => {
 // Actualiza un post
 const updatePost = async (req, res) => {
     try {
-        const post = await Post.findByPk(req.params.id);
+        const id = req.params.id;
+        const post = await Post.findByPk(id);
         if (!post) {
             return res.status(404).json({ message: 'Post no encontrado' });
         }
         await post.update(req.body);
         res.status(200).json(post);
+        cache.del(`post_${id}`); // Borra la entrada en caché
     } catch (error) {
         res.status(500).json({ error: 'Error actualizando el post' });
     }
@@ -65,7 +91,7 @@ const updatePost = async (req, res) => {
 const getCommentsByPost = async (req, res) => {
     try {
         const postId = req.params.id;
-        const comments = await Comment.findAll({ where: { postId: postId}});
+        const comments = await Comment.findAll({ where: { postId: postId } });
         // Trae los comentarios asociados
 
         res.status(200).json(comments);

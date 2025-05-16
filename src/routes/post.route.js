@@ -9,7 +9,7 @@ router.get('/:id', postMiddleware.validId, postController.getPostById); //trae u
 router.get('/:id/tags', postMiddleware.validId, postController.getTagsByPost); //trae todos los tags asignados a un post
 
 
-router.post('/',upload.array('images', 5), postController.createPost); // carga de imagenes
+router.post('/',upload.array('images', 5), postController.createPost); //crea un post con o sin carga de imagenes
 router.post('/:id/tags', postController.addTagsToPost); //asignar varios tags a un post
 
 router.delete('/:id',postMiddleware.validId, postController.deletePost); // elimina un post por su ID
