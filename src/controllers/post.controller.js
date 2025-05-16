@@ -8,10 +8,12 @@ const getPosts = async (req, res) => {
         res.status(500).json({ error: 'Error al obtener los posts' });
     }
 };
+
 const getPostById = async (req, res) => {
     try {
-        const postId = await Post.findByPk(req.params.id);
-        res.status(200).json(postId);
+        const postid = req.params.id;
+        const postId = await Post.findOne({where: {id: postid}, include: ["comments", "images", "tags"]});
+        res.status(200).json(postId.tags);
     } catch {
         res.status(404).json({ message: 'No se encuentra el posteo solicitado' });
     }
@@ -64,10 +66,7 @@ const getCommentsByPost = async (req, res) => {
     try {
         const postId = req.params.id;
         const comments = await Comment.findAll({ where: { postId: postId}});
-
-
         // Trae los comentarios asociados
-        // postId.getComments({ where: { postId: postId} });
 
         res.status(200).json(comments);
     } catch (error) {
