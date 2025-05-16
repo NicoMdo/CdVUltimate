@@ -7,23 +7,28 @@
     console.log(JSON.stringify(data));
 })(); */
 
+require('dotenv').config();
+
 const express = require('express');
 const db = require('./db/models');
 const {generic} = require("./middlewares");
 const app = express();
 const PORT = process.env.PORT || 3001;
+const path = require('path');
 
 
-
+app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use(express.json());
 app.use(generic.logRequest);
-const {tagRoute, userRoute, postRoute, postImageRoute} = require('./routes');
+const {tagRoute, userRoute, postRoute, postImageRoute, commentRoute } = require('./routes');
 app.use('/tag', tagRoute);
 app.use('/user', userRoute);
 app.use('/post', postRoute);
 app.use('/postImage', postImageRoute);
+app.use('/comment', commentRoute);
+
 
 app.listen(PORT, async () => {
     console.log(`La app arranco en el puerto ${PORT}.`);
-    //await db.sequelize.sync({force:true})
+    await db.sequelize.sync({})
 });
