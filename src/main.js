@@ -20,12 +20,14 @@ const path = require('path');
 app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use(express.json());
 app.use(generic.logRequest);
-const {tagRoute, userRoute, postRoute, postImageRoute, commentRoute } = require('./routes');
+const {tagRoute, userRoute, postRoute, postImageRoute, commentRoute, followerRoute } = require('./routes');
 app.use('/tag', tagRoute);
 app.use('/user', userRoute);
 app.use('/post', postRoute);
 app.use('/postImage', postImageRoute);
 app.use('/comment', commentRoute);
+app.use('/follower', followerRoute);
+
 
 
 app.listen(PORT, async () => {

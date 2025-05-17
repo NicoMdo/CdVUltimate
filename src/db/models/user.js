@@ -22,6 +22,18 @@ module.exports = (sequelize, DataTypes) => {
         as: 'comments', // Alias de la asociación
       });
 
+      // Un usuario puede tener muchos seguidores 
+      User.hasMany(models.Follower, {
+        foreignKey: 'followedId',
+        as: 'followeds'
+      });
+      // Un usuario puede seguir muchos usuarios 
+      User.hasMany(models.Follower, {
+        foreignKey: 'followerId',
+        as: 'follows'
+      });
+
+
     }
   }
   User.init({

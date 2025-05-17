@@ -13,12 +13,13 @@ const getUsers = async (req, res) => {
 
 //Devuelve un usuario por ID
 const getUserById = async (req, res) => {
-  const data = await User.findByPk(req.params.id);
+  const data = await User.findOne({where: {id: req.params.id}, include: ["followeds", "follows"]});
   if (data)
     res.status(200).json(data);
   else
     res.status(404).json({ message: "Usuario no encontrado" });
 };
+
 
 //Crea un usuario
 const createUser = async (req, res) => {
