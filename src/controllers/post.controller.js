@@ -13,7 +13,7 @@ const getPostById = async (req, res) => {
     try {
         const postid = req.params.id;
         const postId = await Post.findOne({where: {id: postid}, include: ["comments", "images", "tags"]});
-        res.status(200).json(postId.tags);
+        res.status(200).json(postId);
     } catch {
         res.status(404).json({ message: 'No se encuentra el posteo solicitado' });
     }
