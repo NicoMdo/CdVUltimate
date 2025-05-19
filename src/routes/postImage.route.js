@@ -16,10 +16,10 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 router.get('/', postImageController.getPostImages);
-router.get('/:id', postImageMiddleware.validId, postImageController.getPostImageById);
+router.get('/:id', postImageMiddleware.validId, postImageMiddleware.existsPostImage, postImageController.getPostImageById);
 router.post('/', postImageController.createPostImage);
-router.delete('/:id', postImageMiddleware.validId, postImageController.deletePostImage);
-router.put('/:id', postImageMiddleware.validId, postImageController.updatePostImage);
+router.delete('/:id', postImageMiddleware.validId, postImageMiddleware.existsPostImage, postImageController.deletePostImage);
+router.put('/:id', postImageMiddleware.validId, postImageMiddleware.existsPostImage, postImageController.updatePostImage);
 // Nueva ruta para subir imagen de un post
 router.post('/upload/:postId', upload.single('image'), postImageController.uploadImageForPost);
 

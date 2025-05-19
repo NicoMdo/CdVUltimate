@@ -1,3 +1,5 @@
+const { Post } = require("../db/models");
+
 const validId = (req, res, next) => {
     
     const id = req.params.id
@@ -8,4 +10,15 @@ const validId = (req, res, next) => {
     next();
 };
 
-module.exports = { validId }
+const existsPost = async (req, res, next) => {
+    
+    const id = req.params.id;
+    const data = await Post.findByPk(id);
+
+    if (!data) {
+        return res.status(404).json({ message: `No existe el posteo con id ${id}`})
+    }
+    next();
+};
+
+module.exports = { validId, existsPost }

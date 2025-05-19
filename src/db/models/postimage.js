@@ -16,11 +16,6 @@ module.exports = (sequelize, DataTypes) => {
         as: 'post'
       });
 
-      // Relación con el modelo User
-      PostImage.belongsTo(models.User, {
-        foreignKey: 'userId',
-        as: 'user', // Nombre de la relación
-      });
     }
   }
   PostImage.init({

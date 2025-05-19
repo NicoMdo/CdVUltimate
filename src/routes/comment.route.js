@@ -5,10 +5,10 @@ const { commentMiddleware } = require("../middlewares");
 
 
 router.get('/',commentController.getComments);
-router.get('/:id',commentMiddleware.validId, commentController.getCommentById);
+router.get('/:id',commentMiddleware.validId, commentMiddleware.existsComment, commentController.getCommentById);
 router.post('/', commentController.createComment);
-router.put('/:id',commentMiddleware.validId, commentController.updateComment);
-router.delete('/:id',commentMiddleware.validId, commentController.deleteComment);
+router.put('/:id',commentMiddleware.validId, commentMiddleware.existsComment, commentController.updateComment);
+router.delete('/:id',commentMiddleware.validId, commentMiddleware.existsComment, commentController.deleteComment);
 
 
 
