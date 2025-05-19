@@ -57,7 +57,7 @@ const deleteComment = async (req, res) => {
         const removed = await data.destroy()
         res.status(200).json({ message:`El comentario con número de ID ${removed.id} se ha borrado correctamente` });
     } catch {
-        res.status(400).json({ message: 'No se encuentra el comentario solicitado' });
+        res.status(500).json({ message: 'No se encuentra el comentario solicitado' });
     }
   };
 
@@ -72,7 +72,7 @@ const updateComment = async (req, res) => {
 
     res.status(200).json(comment);
   } catch (error) {
-    res.status(400).json({ error: 'Error al actualizar el comentario' });
+    res.status(500).json({ error: 'Error al actualizar el comentario' });
   }
 };
 

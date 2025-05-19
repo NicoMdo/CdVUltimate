@@ -34,7 +34,7 @@ const deleteTag = async (req, res) => {
         const removed = await data.destroy() 
         res.status(200).json({message: `El tag con número de ID ${removed.id} se ha borrado correctamente`});
     } catch {
-        res.status(400).json({ message: 'No se puede borrar el tag solicitado' });
+        res.status(500).json({ message: 'No se puede borrar el tag solicitado' });
     }
 };
 
@@ -44,7 +44,7 @@ const updateTag = async (req, res) => {
     await tag.update(req.body);
     res.status(200).json(tag);
   } catch (error) {
-    res.status(400).json({ error: 'Error al actualizar la etiqueta' });
+    res.status(500).json({ error: 'Error al actualizar la etiqueta' });
   }
 };
 

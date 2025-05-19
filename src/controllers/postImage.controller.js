@@ -50,7 +50,7 @@ const updatePostImage = async (req, res) => {
     cache.del(`post_${postId}`);
     res.status(200).json(image);
   } catch (error) {
-    res.status(500).json({ error: 'Error actualizando la imagen del post' });
+    res.status(500).json({ error: 'Error al actualizar la imagen del post' });
   }
 };
 
