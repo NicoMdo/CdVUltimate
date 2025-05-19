@@ -59,7 +59,7 @@ const updateUser = async (req, res) => {
 
     res.status(200).json({ message: `El usuario con número de ID ${id} se ha actualizado correctamente` });
   } catch (error) {
-    res.status(500).json({ message: 'El error al actualizar el usuario' });
+    res.status(500).json({ message: 'Error al actualizar el usuario' });
   }
 };
 
