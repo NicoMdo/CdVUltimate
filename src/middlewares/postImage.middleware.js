@@ -1,3 +1,5 @@
+const { PostImage } = require("../db/models")
+
 const validId = (req, res, next) => {
     
     const id = req.params.id
@@ -8,4 +10,15 @@ const validId = (req, res, next) => {
     next();
 };
 
-module.exports = { validId }
+const existsPostImage = async (req, res, next) => {
+    
+    const id = req.params.id;
+    const data = await PostImage.findByPk(id);
+
+    if (!data) {
+        return res.status(404).json({ message: `No existe la imagen de posteo con id ${id}`})
+    }
+    next();
+};
+
+module.exports = { validId, existsPostImage }

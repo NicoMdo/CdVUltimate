@@ -1,3 +1,6 @@
+const { User } = require("../db/models")
+
+
 const validId = (req, res, next) => {
     
     const id = req.params.id
@@ -8,4 +11,17 @@ const validId = (req, res, next) => {
     next();
 };
 
-module.exports = {validId}
+const existsUser = async (req, res, next) => {
+    
+    const id = req.params.id;
+    const data = await User.findByPk(id);
+
+    if (!data) {
+        return res.status(404).json({ message: `No existe el usuario con id ${id}`})
+    }
+    next();
+};
+
+
+
+module.exports = {validId, existsUser}

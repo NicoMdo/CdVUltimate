@@ -25,12 +25,12 @@ module.exports = (sequelize, DataTypes) => {
       // Un usuario puede tener muchos seguidores 
       User.hasMany(models.Follower, {
         foreignKey: 'followedId',
-        as: 'followeds'
+        as: 'followed'
       });
       // Un usuario puede seguir muchos usuarios 
       User.hasMany(models.Follower, {
         foreignKey: 'followerId',
-        as: 'follows'
+        as: 'followers'
       });
 
 
