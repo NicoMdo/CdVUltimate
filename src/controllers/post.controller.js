@@ -27,17 +27,13 @@ const getPostById = async (req, res) => {
             include: ["comments", "images", "tags"]
         });
 
-        if (!post) {
-            return res.status(404).json({ message: 'No se encuentra el posteo solicitado' });
-        }
-
         // Guardar en cache
         cache.set(`post_${postid}`, post);
 
         console.log('🛠️ Post obtenido desde la base de datos');
         res.status(200).json(post);
     } catch (error) {
-        res.status(500).json({ message: 'Error al obtener el post' });
+        res.status(400).json({ message: 'Error al obtener el post' });
     }
 };
 
@@ -56,7 +52,7 @@ const createPost = async (req, res) => {
 
         res.status(201).json(newPost);
     } catch (err) {
-        res.status(500).json({ error: 'Error al crear el post con imágenes' });
+        res.status(500).json({ error: 'Error al crear el post' });
     }
 };
 
@@ -68,7 +64,7 @@ const deletePost = async (req, res) => {
         cache.del(`post_${id}`); // Borra la entrada en caché
         res.status(200).json({ message: `El posteo con número de ID ${removed.id} se ha borrado correctamente` });
     } catch {
-        res.status(404).json({ message: 'No se encuentra la imagen solicitada' });
+        res.status(500).json({ message: 'Error al borrar el post' });
     }
 };
 
@@ -77,14 +73,11 @@ const updatePost = async (req, res) => {
     try {
         const id = req.params.id;
         const post = await Post.findByPk(id);
-        if (!post) {
-            return res.status(404).json({ message: 'Post no encontrado' });
-        }
         await post.update(req.body);
         res.status(200).json(post);
         cache.del(`post_${id}`); // Borra la entrada en caché
     } catch (error) {
-        res.status(500).json({ error: 'Error actualizando el post' });
+        res.status(500).json({ error: 'Error al actualizar el post' });
     }
 };
 

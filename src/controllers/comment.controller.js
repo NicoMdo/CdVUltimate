@@ -44,9 +44,6 @@ const createComment = async (req, res) => {
 const getCommentById = async (req, res) => {
   try {
     const comment = await Comment.findByPk(req.params.id);
-    if (!comment) {
-      return res.status(404).json({ error: 'Comentario no encontrado' });
-    }
     res.status(200).json(comment);
   } catch (error) {
     res.status(500).json({ error: 'Error al obtener el comentario' });
@@ -60,7 +57,7 @@ const deleteComment = async (req, res) => {
         const removed = await data.destroy()
         res.status(200).json({ message:`El comentario con número de ID ${removed.id} se ha borrado correctamente` });
     } catch {
-        res.status(404).json({ message: 'No se encuentra el comentario solicitado' });
+        res.status(400).json({ message: 'No se encuentra el comentario solicitado' });
     }
   };
 
@@ -69,10 +66,6 @@ const updateComment = async (req, res) => {
   try {
     const { text } = req.body;
     const comment = await Comment.findByPk(req.params.id);
-
-    if (!comment) {
-      return res.status(404).json({ error: 'Comentario no encontrado' });
-    }
 
     comment.text = text;
     await comment.save();

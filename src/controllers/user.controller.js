@@ -4,22 +4,28 @@ const { User } = require('../db/models');
 //Devuelve todos los usuarios
 const getUsers = async (req, res) => {
   try {
-    const users = await User.findAll({include: ["followed", "followers", "posts"]});
+    const users = await User.findAll({ include: ["followed", "followers", "posts"] });
     res.status(200).json(users);
   } catch (error) {
-    res.status(500).json({ error: 'Error fetching users' });
+    res.status(500).json({ error: 'Ocurrio un error al obtener usuarios' });
   }
 };
 
 //Devuelve un usuario por ID
 const getUserById = async (req, res) => {
-  const userId = req.params.id;
-  const data = await User.findByPk(userId, {include: ["followed", "followers", "posts"]});
-  if (data)
+  try {
+    const userId = req.params.id;
+    const data = await User.findByPk(userId, {
+      include: ["followed", "followers", "posts"]
+    });
+
     res.status(200).json(data);
-  else
-    res.status(404).json({ message: "Usuario no encontrado" });
+
+  } catch (error) {
+    res.status(500).json({ error: "No se pudo obtener el usuario solicitado" });
+  }
 };
+
 
 
 //Crea un usuario
@@ -28,32 +34,35 @@ const createUser = async (req, res) => {
     const newUser = await User.create(req.body);
     res.status(201).json(newUser);
   } catch (error) {
-    res.status(400).json({ error: 'Error creating user' });
+    res.status(500).json({ error: 'Ocurrio un error al crear el usuario' });
   }
 };
 
 //Borra un usuario
 const deleteUser = async (req, res) => {
-    try {
-        
-        await User.destroy() 
-        res.status(200).json({message: `El usuario con número de ID ${removed.id} se ha borrado correctamente`});
-    } catch {
-        res.status(404).json({ message: 'No se encuentra el usuario solicitado' });
-    }
+  try {
+    const { id } = req.params;
+    await User.destroy({ where: { id } });
+
+    res.status(200).json({ message: `El usuario con número de ID ${id} se ha borrado correctamente` });
+  } catch (error) {
+    res.status(500).json({ message: 'No se puede borrar el usuario solicitado' });
+  }
 };
 
 // Actualiza un usuario
+
 const updateUser = async (req, res) => {
   try {
+    const { id } = req.params;
+    await User.update(req.body, { where: { id } });
 
-    const user = await User.update(req.body);
-    res.status(200).json(user);
+    res.status(200).json({ message: `El usuario con número de ID ${id} se ha actualizado correctamente` });
   } catch (error) {
-    res.status(400).json({ error: 'Error al actualizar el usuario' });
+    res.status(500).json({ message: 'El error al actualizar el usuario' });
   }
 };
 
 
 
-module.exports = { getUsers, getUserById, createUser, deleteUser, updateUser};
+module.exports = { getUsers, getUserById, createUser, deleteUser, updateUser };

@@ -14,7 +14,7 @@ const getTagById = async (req, res) => {
     const tagId = await Tag.findByPk(req.params.id);
     res.status(200).json(tagId);
   } catch (err) {
-    res.status(500).json({ error: 'Error al obtener las etiquetas' });
+    res.status(500).json({ error: 'Error al obtener la etiqueta solicitada' });
   }
 };
 
@@ -34,20 +34,17 @@ const deleteTag = async (req, res) => {
         const removed = await data.destroy() 
         res.status(200).json({message: `El tag con número de ID ${removed.id} se ha borrado correctamente`});
     } catch {
-        res.status(404).json({ message: 'No se encuentra el solicitado' });
+        res.status(400).json({ message: 'No se puede borrar el tag solicitado' });
     }
 };
 
 const updateTag = async (req, res) => {
   try {
     const tag = await Tag.findByPk(req.params.id);
-    if (!tag) {
-      return res.status(404).json({ message: 'Etiqueta no encontrada' });
-    }
     await tag.update(req.body);
     res.status(200).json(tag);
   } catch (error) {
-    res.status(500).json({ error: 'Error actualizando la etiqueta' });
+    res.status(400).json({ error: 'Error al actualizar la etiqueta' });
   }
 };
 
